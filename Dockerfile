@@ -1,4 +1,6 @@
-FROM rocker/verse:4.1.0
+# This requires that you pass DOCKERIMG into the build environment
+ARG DOCKERIMG
+FROM $DOCKERIMG
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \

@@ -1,0 +1,4 @@
+docker:
+  id: rocker
+  img: verse
+  rel: 4.2.1

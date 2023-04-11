@@ -7,7 +7,7 @@
 # Author: Lars Vilhuber 
 
 
-source(file.path(rprojroot::find_root(rprojroot::has_file("config.R")),"config.R"))
+source(here::here("config.R"))
 
   # Define macros, filenames and locations 
   datpums <- file.path(icpsrpath,"13568-0002-Data.txt")   # PUMS Data 
@@ -37,12 +37,15 @@ dct.parser(dcthu, preview = TRUE)
 dcthu_dict <- dct.parser(dcthu, 
                           includes = c("StartPos", "StorageType", "ColName", "ColWidth", "VarLabel"))
 csvkit.schema(dcthu_dict)
+
+list.files()
+
 # this always writes to the pwd
-if (file.exists("housing.dct.csv")) {
-  file.copy("housing.dct.csv",schmahu)
-  file.remove("housing.dct.csv")
-}
-csvkit.fwf2csv(datpums, schmahu, file.path(outputdata,"housing.csv"))
+#if (file.exists("housing.dct.csv")) {
+# file.copy("housing.dct.csv",schmahu)
+#  file.remove("housing.dct.csv")
+#}
+csvkit.fwf2csv(datpums, "housing.dct.csv", file.path(outputdata,"housing.csv"))
 # because this runs asynchronously, but should be fast, we wait for 10 secs
 Sys.sleep(10)     
 hu <- read_csv(file.path(outputdata,"housing.csv"))
@@ -58,11 +61,11 @@ dctp_dict <- dct.parser(dctp,
                          includes = c("StartPos", "StorageType", "ColName", "ColWidth", "VarLabel"))
 csvkit.schema(dctp_dict)
 # this always writes to the pwd
-if (file.exists("person.dct.csv")) {
-  file.copy("person.dct.csv",schmap)
-  file.remove("person.dct.csv")
-}
-csvkit.fwf2csv(datpums, schmap, file.path(outputdata,"person.csv"))
+#if (file.exists("person.dct.csv")) {
+#  file.copy("person.dct.csv",schmap)
+#  file.remove("person.dct.csv")
+#}
+csvkit.fwf2csv(datpums, "person.dct.csv", file.path(outputdata,"person.csv"))
 # because this runs asynchronously, but should be fast, we wait for 10 secs
 Sys.sleep(10)     
 p <- read_csv(file.path(outputdata,"person.csv"))

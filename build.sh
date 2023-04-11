@@ -1,14 +1,20 @@
 #!/bin/bash
+source tools/parse_yaml.sh
+
+eval $(parse_yaml config.yml)
 
 repo=$(echo "${PWD##*/}" | tr [A-Z] [a-z])
 
+TAG=${docker_rel:-latest}
+MYHUBID=${docker_id:-larsvilhuber}
+MYIMG=${docker_img:-$repo}
 
-[[ -z $1 ]] && TAG=$(date +%F) || TAG=$1
-MYHUBID=larsvilhuber
-MYIMG=$repo
+export DOCKERIMG=$MYHUBID/$MYIMG:$TAG
+export TARGETID=run-$(uuidgen)
 
-DOCKER_BUILDKIT=1 docker build  . \
-  -t $MYHUBID/${MYIMG}:$TAG
+DOCKER_BUILDKIT=1 docker build \
+  --build-arg DOCKERIMG=$DOCKERIMG \
+   . \
+  -t $TARGETID
 
-echo "docker run -it --rm  $MYHUBID/${MYIMG}:$TAG"
-echo "docker push  $MYHUBID/${MYIMG}:$TAG"
+echo $TARGETID

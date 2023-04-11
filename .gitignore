@@ -3,3 +3,8 @@
 *13568*
 *.csv
 .Rproj.user
+*.Rds
+*.RData
+*.Rout
+tables
+.bash_history

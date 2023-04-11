@@ -1,12 +1,15 @@
 #!/bin/bash
+source tools/parse_yaml.sh
+
+eval $(parse_yaml config.yml)
 
 repo=$(echo "${PWD##*/}" | tr [A-Z] [a-z])
 
+TAG=${docker_rel:-latest}
+MYHUBID=${docker_id:-larsvilhuber}
+MYIMG=${docker_img:-$repo}
 
-[[ -z $1 ]] && TAG=$(date +%F) || TAG=$1
-[[ -z $2 ]] && MYHUBID=larsvilhuber || MYHUBID=$2
-MYIMG=$repo
-DOCKERIMG=$MYHUBID/$MYIMG
+DOCKERIMG=$MYHUBID/$MYIMG:$TAG
 
 echo "================================"
 echo "Running docker:"
@@ -16,21 +19,24 @@ set -ev
 if [[ $CI ]] 
 then
    DOCKEROPTS="--rm"
-   #DOCKERIMG=$(echo $GITHUB_REPOSITORY | tr [A-Z] [a-z])
-   TAG=latest
 else
    DOCKEROPTS="-it --rm"
-   #DOCKERIMG=$MYHUBID/$MYIMG
-   [[ -z $TAG ]] && TAG=latest
 fi
 
 # ensure that the directories are writable by Docker
 chmod a+rwX data 
+[[ -d tables ]] || mkdir tables
+chmod a+rwX tables
 
+# Build the docker image. this might require network access!
+
+TARGETID=$(./build.sh)
+
+# Now run the code
 
 time docker run $DOCKEROPTS \
   -v "$(pwd)":/home/rstudio \
-  -w /home/rstudio \
-  $DOCKERIMG:$TAG Rscript programs/master.R
+  -w /home/rstudio/programs \
+  $TARGETID R CMD BATCH master.R
 
 
