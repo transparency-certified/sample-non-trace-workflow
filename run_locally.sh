@@ -39,6 +39,6 @@ TARGETID=$(./build.sh)
 time docker run $DOCKEROPTS \
   -v "$(pwd)":/home/rstudio \
   -w /home/rstudio \
-  $TARGETID run.sh
+  $TARGETID ./run.sh
 
 
