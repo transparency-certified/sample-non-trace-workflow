@@ -27,6 +27,7 @@ fi
 chmod a+rwX data 
 [[ -d tables ]] || mkdir tables
 chmod a+rwX tables
+chmod a+rwX programs
 
 # Build the docker image. this might require network access!
 
