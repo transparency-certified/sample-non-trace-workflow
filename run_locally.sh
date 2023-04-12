@@ -39,7 +39,7 @@ TARGETID=$(./build.sh)
 time docker run $DOCKEROPTS \
   -v "$(pwd)":/home/rstudio \
   -w /home/rstudio \
-  --entry-point /bin/bash \
+  --entrypoint /bin/bash \
   $TARGETID ./run.sh
 
 
