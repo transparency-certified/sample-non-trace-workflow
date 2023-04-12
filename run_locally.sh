@@ -28,6 +28,7 @@ chmod a+rwX data
 [[ -d tables ]] || mkdir tables
 chmod a+rwX tables
 chmod a+rwX programs
+chmod a+rx *sh
 
 # Build the docker image. this might require network access!
 
@@ -37,7 +38,7 @@ TARGETID=$(./build.sh)
 
 time docker run $DOCKEROPTS \
   -v "$(pwd)":/home/rstudio \
-  -w /home/rstudio/programs \
-  $TARGETID R CMD BATCH master.R
+  -w /home/rstudio \
+  $TARGETID run.sh
 
 
